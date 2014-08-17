@@ -13,6 +13,7 @@ namespace ftw
 App::App()
 {
 	init();
+	tempHumidity = new TempHumidity();
 }
 
 App::App(const App& x)
@@ -35,16 +36,14 @@ void App::init()
 {
 	initLogging();
 	BOOST_LOG_SEV(lg, info) << "logging initialized";
-	tempHumidity = new TempHumidity();
 }
-
+//thread service run method
 void App::operator()()
 {
 	BOOST_LOG_SEV(ftw::lg, info) << "start of App thread";
-	boost::thread* tempHumidity_t = new boost::thread(*tempHumidity);
-
-	tempHumidity_t->join();
-	delete tempHumidity_t;
+	//thread taken on stack...raii
+	boost::thread tempHumidity_th(*tempHumidity);
+	tempHumidity_th.join();
 	BOOST_LOG_SEV(ftw::lg, trace) << "end of App thread";
 }
 //-----------------------------------------------------------------------------
@@ -54,11 +53,10 @@ void App::operator()()
 int main()
 {
 ftw::App* ftw = new ftw::App();
-boost::thread* app_t = new boost::thread(*ftw);
+boost::thread app_th(*ftw);
 //do the work
-app_t->join();
+app_th.join();
 delete ftw;
-delete app_t;
 BOOST_LOG_SEV(ftw::lg, trace)<< "end of main";
 
 }

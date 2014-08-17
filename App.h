@@ -31,6 +31,8 @@ public:
 	App& operator =(const App&);
 
 	virtual ~App();
+
+	//thread service run method
 	void operator()();
 
 private:
@@ -38,7 +40,7 @@ private:
 	void init();
 
 private:
-	//data
+	//data couldn't get shared_ptr to work with eclipse
 	TempHumidity* tempHumidity;
 
 };
