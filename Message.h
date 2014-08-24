@@ -10,8 +10,11 @@
 
 #include "Logging.h"
 #include <memory>
+#include "boost/date_time/gregorian/gregorian.hpp"
+#include "boost/date_time/posix_time/posix_time.hpp"
 
-namespace fcmessage
+//snugglynoodles
+namespace sn_message
 {
 
 struct MsgType
@@ -23,13 +26,15 @@ struct MsgType
 };
 
 //Tmsg is intended to be a project specific int enum
-template<typename Tmsg>
+template<typename TmsgType, typename TtimeType>
 class Message
 {
 public:
 	Message()
 	{
 		msgType = MsgType::unknown;
+		time = 0;
+		double* x = new double(0.0);
 	}
 	Message(const Message& x)
 	{
@@ -43,22 +48,27 @@ public:
 	~Message()
 	{
 	}
-	Tmsg getType() const
+	const TmsgType& getType() const
 	{
 		return msgType;
 	}
+	const TtimeType& getTime()const
+	{
+		return time;
+	}
 private:
-	Tmsg msgType;
+	TmsgType msgType;
+	TtimeType time;
 };
 //
 //Inter-thread message
 //
-template<typename Tmsg>
+template<typename TmsgType>
 class ITMessage: public Message
 {
 public:
 	template<typename Tobj>
-	static ITMessage<Tmsg>* make_msg(Tmsg id, Tobj* x)
+	static ITMessage<TmsgType>* make_msg(TmsgType id, Tobj* x)
 	{
 		ITMessage* newMsg = new ITMessage(id);
 		newMsg->setPtr(shared_ptr<void>(reinterpret_cast<void*>(x)));
@@ -66,7 +76,7 @@ public:
 	}
 
 	template<typename Tobj>
-	static Tobj get_payload(ITMessage<Tmsg>* msg)
+	static Tobj get_payload(ITMessage<TmsgType>* msg)
 	{
 
 	}
@@ -75,23 +85,20 @@ public:
 	{
 		ptr.reset();
 	}
+
 private:
 	ITMessage(MsgType t = MsgType::unknown) :
-			Message(t), ptr(nullptr_t)
+			Message(t), ptr(std::nullptr_t)
 	{
 	}
-	ITMessage() :
-			Message(MsgType::unknown), ptr(nullptr_t)
+	ITMessage(const ITMessage& x) :
+			Message(x)
 	{
-	}
-	ITMessage(const ITMessage& x)
-	{
-		static_cast<Message>(*this) = static_cast<Message>(x);
 		ptr = x.ptr;
 	}
 	ITMessage& operator =(const ITMessage& x)
 	{
-		static_cast<Message>(*this) = static_cast<Message>(x);
+		static_cast<Message&>(*this) = static_cast<Message&>(x);
 		ptr = x.ptr;
 		return *this;
 	}
@@ -100,28 +107,29 @@ private:
 		ptr = x;
 	}
 private:
-	shared_ptr<void> ptr;
+	std::shared_ptr<void> ptr;
 };
 //
 //Inter process message
 //
-template<typename Tmsg, typename Tchar>
+template<typename TmsgType, typename Tchar>
 class IPMessage: public Message
 {
 public:
 	IPMessage() :
-			Message<Tmsg>(MsgType::unknown), ptr(nullptr_t), length(0)
+			Message<TmsgType>(MsgType::unknown), ptr(std::nullptr_t), length(0)
 	{
 	}
-	virtual ~IPMessage<Tmsg, Tchar>()
+	virtual ~IPMessage<TmsgType, Tchar>()
 	{
+		ptr.reset();
 	}
 
 	virtual void read() = 0;
 	virtual void write() = 0;
 
 private:
-	shared_ptr<Tchar> ptr;
+	std::shared_ptr<Tchar> ptr;
 	streamsize length;
 };
 
