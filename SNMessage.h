@@ -5,11 +5,13 @@
  *      Author: fred
  */
 
-#ifndef MESSAGE_H_
-#define MESSAGE_H_
+#ifndef SNMESSAGE_H_
+#define SNMESSAGE_H_
 
 #include "Logging.h"
 #include <memory>
+#include "SNTime.h"
+
 #include "boost/date_time/gregorian/gregorian.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 
@@ -26,9 +28,11 @@ struct MsgType
 };
 
 //Tmsg is intended to be a project specific int enum
-template<typename TmsgType, typename TtimeType>
+template<typename TmsgType>
 class Message
 {
+	typedef sn_time::MsgTimePoint time_point;
+
 public:
 	Message()
 	{
@@ -52,13 +56,13 @@ public:
 	{
 		return msgType;
 	}
-	const TtimeType& getTime()const
+	const time_point& getTime()const
 	{
 		return time;
 	}
 private:
 	TmsgType msgType;
-	TtimeType time;
+	time_point time;
 };
 //
 //Inter-thread message
