@@ -24,6 +24,7 @@ MsgTimePoint getMsgTimePoint()
 
 typedef typename std::chrono::high_resolution_clock HighResClock;
 typedef typename std::chrono::high_resolution_clock::time_point HighResTimePoint;
+
 MsgTimePoint getHighResTimePoint()
 {
 	return HighResClock::now();

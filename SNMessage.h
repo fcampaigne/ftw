@@ -34,32 +34,38 @@ class Message
 	typedef sn_time::MsgTimePoint time_point;
 
 public:
-	Message()
+	Message() :
+			msgType(MsgType::unknown), time(sn_time::getMsgTimePoint())
 	{
-		msgType = MsgType::unknown;
-		time = 0;
-		double* x = new double(0.0);
 	}
-	Message(const Message& x)
+	Message(TmsgType t) :
+			msgType(t), time(sn_time::getMsgTimePoint())
 	{
-		msgType = x.msgType;
 	}
+
+	Message(const Message& x) : msgType(x.msgType), time(x.time)
+	{
+	}
+
 	Message& operator =(const Message& x)
 	{
 		msgType = x.msgType;
+		time = x.time;
 		return *this;
-	}
-	~Message()
-	{
 	}
 	const TmsgType& getType() const
 	{
 		return msgType;
 	}
-	const time_point& getTime()const
+	const time_point& getTime() const
 	{
 		return time;
 	}
+	double getSeconds() const
+	{
+		return ((double)(time.time_since_epoch().count()))/(double)time_point::period::den;
+	}
+
 private:
 	TmsgType msgType;
 	time_point time;
@@ -91,7 +97,11 @@ public:
 	}
 
 private:
-	ITMessage(MsgType t = MsgType::unknown) :
+	ITMessage() :
+			Message(), ptr(std::nullptr_t)
+	{
+	}
+	ITMessage(TmsgType t) :
 			Message(t), ptr(std::nullptr_t)
 	{
 	}
@@ -102,7 +112,7 @@ private:
 	}
 	ITMessage& operator =(const ITMessage& x)
 	{
-		static_cast<Message&>(*this) = static_cast<Message&>(x);
+		static_cast<Message&>(*this) = x;
 		ptr = x.ptr;
 		return *this;
 	}
