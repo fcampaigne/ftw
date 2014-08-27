@@ -5,18 +5,19 @@
  *      Author: fred
  */
 
-#ifndef SNMESSAGE_H_
-#define SNMESSAGE_H_
+#ifndef FTWMESSAGE_H_
+#define FTWMESSAGE_H_
 
-#include "Logging.h"
 #include <memory>
-#include "SNTime.h"
 
 #include "boost/date_time/gregorian/gregorian.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 
+#include "Logging.h"
+#include "ftwTime.h"
+
 //snugglynoodles
-namespace sn_message
+namespace ftw
 {
 
 struct MsgType
@@ -31,15 +32,15 @@ struct MsgType
 template<typename TmsgType>
 class Message
 {
-	typedef sn_time::MsgTimePoint time_point;
+	typedef time::MsgTimePoint time_point;
 
 public:
 	Message() :
-			msgType(MsgType::unknown), time(sn_time::getMsgTimePoint())
+			msgType(MsgType::unknown), time(time::getMsgTimePoint())
 	{
 	}
 	Message(TmsgType t) :
-			msgType(t), time(sn_time::getMsgTimePoint())
+			msgType(t), time(time::getMsgTimePoint())
 	{
 	}
 
@@ -149,4 +150,4 @@ private:
 
 } //end namespace
 
-#endif /* MESSAGE_H_ */
+#endif /* FTWMESSAGE_H_ */
