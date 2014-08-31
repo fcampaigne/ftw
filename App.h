@@ -39,7 +39,6 @@ private:
 	//methods
 	void init();
 
-private:
 	//data couldn't get shared_ptr to work with eclipse
 	TempHumidity* tempHumidity;
 

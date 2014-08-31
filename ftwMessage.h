@@ -16,7 +16,6 @@
 #include "Logging.h"
 #include "ftwTime.h"
 
-//snugglynoodles
 namespace ftw
 {
 
@@ -32,15 +31,15 @@ struct MsgType
 template<typename TmsgType>
 class Message
 {
-	typedef time::MsgTimePoint time_point;
+	typedef Time::MsgTimePoint time_point;
 
 public:
 	Message() :
-			msgType(MsgType::unknown), time(time::getMsgTimePoint())
+			msgType(MsgType::unknown), time(Time::getMsgTimePoint())
 	{
 	}
 	Message(TmsgType t) :
-			msgType(t), time(time::getMsgTimePoint())
+			msgType(t), time(Time::getMsgTimePoint())
 	{
 	}
 
