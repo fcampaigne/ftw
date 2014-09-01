@@ -26,7 +26,6 @@ public:
 
 private:
 	static boost::asio::io_service io;
-
 };
 
 } /* namespace ftw */

@@ -15,21 +15,25 @@
 #include "boost/date_time/gregorian/gregorian.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include "boost/thread/thread.hpp"
+#include "ASIO.h"
 //threads
 #include "Logging.h"
-#include "TempHumidity.h"
+#include "ADC.h"
+#include "WatchDogTimer.h"
 
 namespace ftw
 {
 
+
 class App
 {
+
 public:
 	//methods
 	App();
 	App(const App&);
 	App& operator =(const App&);
-
+	void startWatchdog();
 	virtual ~App();
 
 	//thread service run method
@@ -39,9 +43,9 @@ private:
 	//methods
 	void init();
 
-	//data couldn't get shared_ptr to work with eclipse
-	TempHumidity* tempHumidity;
-
+private://data couldn't get shared_ptr to work with eclipse
+	ADC* adc;
+	WatchDogTimer* wdt;
 };
 
 } /* namespace ftw */
