@@ -35,7 +35,7 @@ public:
 	typedef typename std::chrono::high_resolution_clock HighResClock;
 	typedef typename std::chrono::high_resolution_clock::time_point HighResTimePoint;
 
-	static MsgTimePoint getHighResTimePoint()
+	static HighResTimePoint getHighResTimePoint()
 	{
 		return HighResClock::now();
 	}
