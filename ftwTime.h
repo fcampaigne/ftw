@@ -25,6 +25,7 @@ public:
 	{
 		return MsgClock::now();
 	}
+
 	static double getMsgSeconds()
 	{
 		return (double)(MsgClock::now().time_since_epoch().count())/(double)Time::MsgTimePoint::period::den;
@@ -39,10 +40,12 @@ public:
 	{
 		return HighResClock::now();
 	}
+
 	static double getHighResSeconds()
 	{
 		return (double)(HighResClock::now().time_since_epoch().count())/(double)Time::HighResTimePoint::period::den;
 	}
+
 	static double HighResPrecision;
 };
 
